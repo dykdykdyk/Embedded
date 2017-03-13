@@ -1,0 +1,38 @@
+第0课第1节
+   1.安装并口JTAG驱动，把windows\drivers\dongle_jtag下的GIVEIO.SYS复制到c盘 C:\WINDOWS\system32\drivers目录下，控制面板，添加硬件，。安装完成后，在设备管理器-端口 里面会看到有一个giveio口。
+   2.安装OpenJTAG 驱动，讲JTAG插上电脑，发现新硬件，然后从指定位置F:\光盘资料\资料光盘\烧写工具\裸机\eop&op\驱动\OpenJTAG 安装，安装3次才完成。在设备管理器-端口 里面会看到有一个USB Serial Port驱动。
+   3.JZ2440v2集成的USB串口卡驱动安装：G:\BaiduNetdiskDownload\windows
+\drivers，PL2303_Prolific_DriverInstaller_v1.5.0.exe，双击，运行就可以了，然后接USB线(板子上的usb-COM1口<==>pc的usb口)
+   4.安装烧写软件，把G:\BaiduNetdiskDownload\windows\tools下的oflash和dll文件复制到c盘windows/system32目录下，在命令行输入oflash有作用，表示安装成功，ctrl+c退出此命令。
+   5.安装secureCRT工具，安装完成之后，打开new protocol Serial port选择开发板的端口 RTS/CTS 不要打钩。。
+     
+第0课第2节
+   1.使用并口工具烧写：接线，使用oflash烧写，重新上电观察效果
+   2.使用openjtag烧写：接线，使用oflash烧写（oflash烧写完后会复位开发板）
+   3，使用jlink烧写(只能 烧写 nor flash,烧好u-boot.bin,使用NOR启动)
+   4.使用nor flash 上的uboot来烧写
+     oflash 0(openJTAG)  1(S3C2440) 1(Nor Flash prog) 0(0000)
+     1.使用菜单通过usb下载烧写（需要连接USB线）Usb驱动在windows/drivers/dnw
+     2.使用tftp下载烧写
+    设置uboot里的 set ipaddr 192.168.1.17
+                  set serverip 192.168.1.75
+        tftp 3000000 lcd.bin 
+        nand erase bootloader 
+        nand write 3000000 bootloader 
+第0课第3节(在secureCRT 中输入menu会回到选择菜单选项 烧写系统)
+    1.u-boot的烧写和上面的烧写一样
+    2.烧写内核  在secureCRT 中输入k，再用dnw.exe发送文件就可以了 4.3版本的
+    tftp   tftp 3000000 uImage
+        nand erase kernel
+        nand write.jffs2 3000000 kernel
+    3.文件系统
+      在secureCRT 中输入y，再用dnw.exe发送yaffs文件就可以了
+   或在secureCRT 中输入j，再用dnw.exe发送jffs文件就可以了，
+    tftp:
+        tftp 3000000 fs_qtopia.yaffs2
+        nand erase root(擦除)
+        nand write.yaffs 30000000 0x00260000 $(filesize)
+   烧写完成之后，输入reset就可以看到效果了
+
+第0课第4节(安装VM，配置开发环境，设置网络)
+    1.密码123456
